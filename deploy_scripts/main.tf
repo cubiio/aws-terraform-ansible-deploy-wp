@@ -169,3 +169,40 @@ resource "aws_subnet" "wp_rds3_subnet" {
     Name = "wp_rds3"
   }
 }
+
+# ----- RDS subnet group -----
+resource "aws_db_subnet_group" "wp_rds_subnetgroup" {
+  name = "aws_db_subnet_group"
+
+  subnet_ids = [
+    "${aws_subnet.wp_rds1_subnet.id}",
+    "${aws_subnet.wp_rds2_subnet.id}",
+    "${aws_subnet.wp_rds3_subnet.id}"
+  ]
+
+  tags {
+    Name = "wp_rds_sng"
+  }
+}
+
+# ----- Subnet associations -----
+# TODO(sam) use `count` for DRY code
+resource "aws_route_table_association" "wp_public1_assoc" {
+  subnet_id = "${aws_subnet.wp_public1_subnet.id}"
+  route_table_id = "${aws_route_table.wp_public_rt.id}"
+}
+
+resource "aws_route_table_association" "wp_public2_assoc" {
+  subnet_id = "${aws_subnet.wp_public2_subnet.id}"
+  route_table_id = "${aws_route_table.wp_public_rt.id}"
+}
+
+resource "aws_route_table_association" "wp_private1_assoc" {
+  subnet_id = "${aws_subnet.wp_private1_subnet.id}"
+  route_table_id = "${aws_default_route_table.wp_private_rt.id}"
+}
+
+resource "aws_route_table_association" "wp_private2_assoc" {
+  subnet_id = "${aws_subnet.wp_private2_subnet.id}"
+  route_table_id = "${aws_default_route_table.wp_private_rt.id}"
+}
