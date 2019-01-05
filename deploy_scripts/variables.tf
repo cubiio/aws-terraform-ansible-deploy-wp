@@ -16,3 +16,8 @@ variable "db_instance_class" {}
 variable "db_name" {}
 variable "db_user" {}
 variable "db_password" {}
+
+variable "elb_healthy_threshold" {}
+variable "elb_unhealthy_threshold" {}
+variable "elb_timeout" {}
+variable "elb_interval" {}

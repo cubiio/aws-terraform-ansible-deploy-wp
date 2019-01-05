@@ -1,2 +1,28 @@
 aws_profile = "profile_name"
 aws_region = "add_region_here"
+vpc_cidr = ""
+cidrs = {
+  public1 = ""
+  public2 = ""
+  private1 = ""
+  private2 = ""
+  rds1 = ""
+  rds2 = ""
+  rds3 = ""
+}
+
+localip = ""
+
+domain_name = ""
+
+# rds
+db_instance_class = ""
+db_name = ""
+db_user = ""
+db_password = ""
+
+# load balancer
+elb_healthy_threshold = ""
+elb_unhealthy_threshold = ""
+elb_timeout = ""
+elb_interval = ""
