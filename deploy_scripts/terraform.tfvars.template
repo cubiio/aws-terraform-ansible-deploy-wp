@@ -26,3 +26,9 @@ elb_healthy_threshold = ""
 elb_unhealthy_threshold = ""
 elb_timeout = ""
 elb_interval = ""
+
+# dev
+key_name = ""
+dev_instance_type = ""
+dev_ami = ""
+public_key_path = ""
