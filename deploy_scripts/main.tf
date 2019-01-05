@@ -303,3 +303,46 @@ resource "aws_security_group" "wp_rds_sg" {
     ]
   }
 }
+
+# ----- VPC Endpoint for S3 -----
+
+resource "aws_vpc_endpoint" "wp_private_s3_endpoint" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+  service_name = "com.amazonaws.${var.aws_region}.s3"
+
+  route_table_ids = [
+    "${aws_vpc.wp_vpc.main_route_table_id}",
+    "${aws_route_table.wp_public_rt.id}"
+  ]
+
+  # NOTE policy very permissive, requires hardening for Prod envs
+  policy = <<POLICY
+{
+  "Statement": [
+    {
+      "Action": "*",
+      "Effect": "Allow",
+      "Resource": "*",
+      "Principal": "*"
+    }
+  ]
+}
+POLICY
+}
+
+# ----- S3 code bucket -----
+
+resource "random_id" "wp_code_bucket" {
+  byte_length = 2
+}
+
+resource "aws_s3_bucket" "code" {
+  bucket = "${var.domain_name}-${random_id.wp_code_bucket.dec}"
+  acl = "private"
+  # NOTE bucket destroyed means when destroy infra the bucket goes with it
+  force_destroy = true
+
+  tags {
+    Name = "code bucket"
+  }
+}
