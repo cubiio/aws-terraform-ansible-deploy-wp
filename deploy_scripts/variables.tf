@@ -26,3 +26,14 @@ variable "key_name" {}
 variable "dev_instance_type" {}
 variable "dev_ami" {}
 variable "public_key_path" {}
+
+# launch config
+variable "lc_instance_type" {}
+
+# asg
+variable "asg_max" {}
+
+variable "asg_min" {}
+variable "asg_grace" {}
+variable "asg_hct" {}
+variable "asg_cap" {}

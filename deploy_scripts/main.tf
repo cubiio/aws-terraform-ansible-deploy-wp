@@ -52,9 +52,9 @@ EOF
 
 # ----- VPC -----
 resource "aws_vpc" "wp_vpc" {
-  cidr_block = "${var.vpc_cidr}"
+  cidr_block           = "${var.vpc_cidr}"
   enable_dns_hostnames = true
-  enable_dns_support = true
+  enable_dns_support   = true
 
   tags {
     Name = "wp_vpc"
@@ -94,10 +94,10 @@ resource "aws_default_route_table" "wp_private_rt" {
 
 # ----- Subnets -----
 resource "aws_subnet" "wp_public1_subnet" {
-  vpc_id = "${aws_vpc.wp_vpc.id}"
-  cidr_block = "${var.cidrs["public1"]}"
+  vpc_id                  = "${aws_vpc.wp_vpc.id}"
+  cidr_block              = "${var.cidrs["public1"]}"
   map_public_ip_on_launch = true
-  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+  availability_zone       = "${data.aws_availability_zones.available.names[0]}"
 
   tags {
     Name = "wp_public1"
@@ -105,10 +105,10 @@ resource "aws_subnet" "wp_public1_subnet" {
 }
 
 resource "aws_subnet" "wp_public2_subnet" {
-  vpc_id = "${aws_vpc.wp_vpc.id}"
-  cidr_block = "${var.cidrs["public2"]}"
+  vpc_id                  = "${aws_vpc.wp_vpc.id}"
+  cidr_block              = "${var.cidrs["public2"]}"
   map_public_ip_on_launch = true
-  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+  availability_zone       = "${data.aws_availability_zones.available.names[1]}"
 
   tags {
     Name = "wp_public2"
@@ -116,10 +116,10 @@ resource "aws_subnet" "wp_public2_subnet" {
 }
 
 resource "aws_subnet" "wp_private1_subnet" {
-  vpc_id = "${aws_vpc.wp_vpc.id}"
-  cidr_block = "${var.cidrs["private1"]}"
+  vpc_id                  = "${aws_vpc.wp_vpc.id}"
+  cidr_block              = "${var.cidrs["private1"]}"
   map_public_ip_on_launch = false
-  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+  availability_zone       = "${data.aws_availability_zones.available.names[0]}"
 
   tags {
     Name = "wp_private1"
@@ -127,10 +127,10 @@ resource "aws_subnet" "wp_private1_subnet" {
 }
 
 resource "aws_subnet" "wp_private2_subnet" {
-  vpc_id = "${aws_vpc.wp_vpc.id}"
-  cidr_block = "${var.cidrs["private2"]}"
+  vpc_id                  = "${aws_vpc.wp_vpc.id}"
+  cidr_block              = "${var.cidrs["private2"]}"
   map_public_ip_on_launch = false
-  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+  availability_zone       = "${data.aws_availability_zones.available.names[1]}"
 
   tags {
     Name = "wp_private2"
@@ -138,10 +138,10 @@ resource "aws_subnet" "wp_private2_subnet" {
 }
 
 resource "aws_subnet" "wp_rds1_subnet" {
-  vpc_id = "${aws_vpc.wp_vpc.id}"
-  cidr_block = "${var.cidrs["rds1"]}"
+  vpc_id                  = "${aws_vpc.wp_vpc.id}"
+  cidr_block              = "${var.cidrs["rds1"]}"
   map_public_ip_on_launch = false
-  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+  availability_zone       = "${data.aws_availability_zones.available.names[0]}"
 
   tags {
     Name = "wp_rds1"
@@ -149,10 +149,10 @@ resource "aws_subnet" "wp_rds1_subnet" {
 }
 
 resource "aws_subnet" "wp_rds2_subnet" {
-  vpc_id = "${aws_vpc.wp_vpc.id}"
-  cidr_block = "${var.cidrs["rds2"]}"
+  vpc_id                  = "${aws_vpc.wp_vpc.id}"
+  cidr_block              = "${var.cidrs["rds2"]}"
   map_public_ip_on_launch = false
-  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+  availability_zone       = "${data.aws_availability_zones.available.names[1]}"
 
   tags {
     Name = "wp_rds2"
@@ -160,10 +160,10 @@ resource "aws_subnet" "wp_rds2_subnet" {
 }
 
 resource "aws_subnet" "wp_rds3_subnet" {
-  vpc_id = "${aws_vpc.wp_vpc.id}"
-  cidr_block = "${var.cidrs["rds3"]}"
+  vpc_id                  = "${aws_vpc.wp_vpc.id}"
+  cidr_block              = "${var.cidrs["rds3"]}"
   map_public_ip_on_launch = false
-  availability_zone = "${data.aws_availability_zones.available.names[2]}"
+  availability_zone       = "${data.aws_availability_zones.available.names[2]}"
 
   tags {
     Name = "wp_rds3"
@@ -177,7 +177,7 @@ resource "aws_db_subnet_group" "wp_rds_subnetgroup" {
   subnet_ids = [
     "${aws_subnet.wp_rds1_subnet.id}",
     "${aws_subnet.wp_rds2_subnet.id}",
-    "${aws_subnet.wp_rds3_subnet.id}"
+    "${aws_subnet.wp_rds3_subnet.id}",
   ]
 
   tags {
@@ -188,22 +188,22 @@ resource "aws_db_subnet_group" "wp_rds_subnetgroup" {
 # ----- Subnet associations -----
 # TODO(sam) use `count` for DRY code
 resource "aws_route_table_association" "wp_public1_assoc" {
-  subnet_id = "${aws_subnet.wp_public1_subnet.id}"
+  subnet_id      = "${aws_subnet.wp_public1_subnet.id}"
   route_table_id = "${aws_route_table.wp_public_rt.id}"
 }
 
 resource "aws_route_table_association" "wp_public2_assoc" {
-  subnet_id = "${aws_subnet.wp_public2_subnet.id}"
+  subnet_id      = "${aws_subnet.wp_public2_subnet.id}"
   route_table_id = "${aws_route_table.wp_public_rt.id}"
 }
 
 resource "aws_route_table_association" "wp_private1_assoc" {
-  subnet_id = "${aws_subnet.wp_private1_subnet.id}"
+  subnet_id      = "${aws_subnet.wp_private1_subnet.id}"
   route_table_id = "${aws_default_route_table.wp_private_rt.id}"
 }
 
 resource "aws_route_table_association" "wp_private2_assoc" {
-  subnet_id = "${aws_subnet.wp_private2_subnet.id}"
+  subnet_id      = "${aws_subnet.wp_private2_subnet.id}"
   route_table_id = "${aws_default_route_table.wp_private_rt.id}"
 }
 
@@ -211,95 +211,95 @@ resource "aws_route_table_association" "wp_private2_assoc" {
 
 # dev
 resource "aws_security_group" "wp_dev_sg" {
-  name = "wp_dev_sg"
+  name        = "wp_dev_sg"
   description = "Used for access to the dev instance"
-  vpc_id = "${aws_vpc.wp_vpc.id}"
+  vpc_id      = "${aws_vpc.wp_vpc.id}"
 
   # ssh
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["${var.localip}"]
   }
 
   # http
   ingress {
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["${var.localip}"]
   }
 
   # simplified example, allows all access
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
 # public
 resource "aws_security_group" "wp_public_sg" {
-  name = "wp_public_sg"
+  name        = "wp_public_sg"
   description = "Used for the elastic load balancer for public access"
-  vpc_id = "${aws_vpc.wp_vpc.id}"
+  vpc_id      = "${aws_vpc.wp_vpc.id}"
 
   # http
   ingress {
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
 # private
 resource "aws_security_group" "wp_private_sg" {
-name = "wp_private_sg"
+  name        = "wp_private_sg"
   description = "Used for private instances"
-  vpc_id = "${aws_vpc.wp_vpc.id}"
+  vpc_id      = "${aws_vpc.wp_vpc.id}"
 
   # access from VPC
   ingress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["${var.vpc_cidr}"]
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
 # rds
 resource "aws_security_group" "wp_rds_sg" {
-  name = "wp_rds_sg"
+  name        = "wp_rds_sg"
   description = "Used for RDS instances"
-  vpc_id = "${aws_vpc.wp_vpc.id}"
+  vpc_id      = "${aws_vpc.wp_vpc.id}"
 
   # SQL access for public/private security groups
   ingress {
     from_port = 3306
-    to_port = 3306
-    protocol = "tcp"
+    to_port   = 3306
+    protocol  = "tcp"
 
     security_groups = [
       "${aws_security_group.wp_dev_sg.id}",
       "${aws_security_group.wp_public_sg.id}",
-      "${aws_security_group.wp_private_sg.id}"
+      "${aws_security_group.wp_private_sg.id}",
     ]
   }
 }
@@ -307,12 +307,12 @@ resource "aws_security_group" "wp_rds_sg" {
 # ----- VPC Endpoint for S3 -----
 
 resource "aws_vpc_endpoint" "wp_private_s3_endpoint" {
-  vpc_id = "${aws_vpc.wp_vpc.id}"
+  vpc_id       = "${aws_vpc.wp_vpc.id}"
   service_name = "com.amazonaws.${var.aws_region}.s3"
 
   route_table_ids = [
     "${aws_vpc.wp_vpc.main_route_table_id}",
-    "${aws_route_table.wp_public_rt.id}"
+    "${aws_route_table.wp_public_rt.id}",
   ]
 
   # NOTE policy very permissive, requires hardening for Prod envs
@@ -338,7 +338,8 @@ resource "random_id" "wp_code_bucket" {
 
 resource "aws_s3_bucket" "code" {
   bucket = "${var.domain_name}-${random_id.wp_code_bucket.dec}"
-  acl = "private"
+  acl    = "private"
+
   # NOTE bucket destroyed means when destroy infra the bucket goes with it
   force_destroy = true
 
@@ -350,16 +351,16 @@ resource "aws_s3_bucket" "code" {
 # ----- RDS db -----
 
 resource "aws_db_instance" "wp_db" {
-  allocated_storage = 10
-  engine = "mysql"
-  engine_version = "5.6.27"
-  instance_class = "${var.db_instance_class}"
-  name = "${var.db_name}"
-  username = "${var.db_user}"
-  password = "${var.db_password}"
-  db_subnet_group_name = "${aws_db_subnet_group.wp_rds_subnetgroup.name}"
+  allocated_storage      = 10
+  engine                 = "mysql"
+  engine_version         = "5.6.27"
+  instance_class         = "${var.db_instance_class}"
+  name                   = "${var.db_name}"
+  username               = "${var.db_user}"
+  password               = "${var.db_password}"
+  db_subnet_group_name   = "${aws_db_subnet_group.wp_rds_subnetgroup.name}"
   vpc_security_group_ids = ["${aws_security_group.wp_rds_sg.id}"]
-  skip_final_snapshot = true
+  skip_final_snapshot    = true
 }
 
 # ----- Load Balancer -----
@@ -369,31 +370,33 @@ resource "aws_elb" "wp_elb" {
 
   subnets = [
     "${aws_subnet.wp_public1_subnet.id}",
-    "${aws_subnet.wp_public2_subnet.id}"
+    "${aws_subnet.wp_public2_subnet.id}",
   ]
 
   security_groups = ["${aws_security_group.wp_public_sg.id}"]
 
   listener {
-    instance_port = 80
+    instance_port     = 80
     instance_protocol = "http"
-    lb_port = 80
-    lb_protocol = "http"
+    lb_port           = 80
+    lb_protocol       = "http"
   }
 
   health_check {
-    healthy_threshold = "${var.elb_healthy_threshold}"
+    healthy_threshold   = "${var.elb_healthy_threshold}"
     unhealthy_threshold = "${var.elb_unhealthy_threshold}"
-    timeout = "${var.elb_timeout}"
+    timeout             = "${var.elb_timeout}"
+
     # using TCP because Wordpress sometimes serves a 301 redirect instead of a 200
     # meaning if used HTTP here and didn't receive a 200, would fail health check
     target = "TCP:80"
+
     interval = "${var.elb_interval}"
   }
 
-  cross_zone_load_balancing = true
-  idle_timeout = 400
-  connection_draining = true
+  cross_zone_load_balancing   = true
+  idle_timeout                = 400
+  connection_draining         = true
   connection_draining_timeout = 400
 
   tags {
@@ -405,23 +408,23 @@ resource "aws_elb" "wp_elb" {
 
 # key pair
 resource "aws_key_pair" "wp_auth" {
-  key_name = "${var.key_name}"
+  key_name   = "${var.key_name}"
   public_key = "${file(var.public_key_path)}"
 }
 
 # dev server
 resource "aws_instance" "wp_dev" {
   instance_type = "${var.dev_instance_type}"
-  ami = "${var.dev_ami}"
+  ami           = "${var.dev_ami}"
 
   tags {
     Name = "wp_dev"
   }
 
-  key_name = "${aws_key_pair.wp_auth.id}"
+  key_name               = "${aws_key_pair.wp_auth.id}"
   vpc_security_group_ids = ["${aws_security_group.wp_dev_sg.id}"]
-  iam_instance_profile = "${aws_iam_instance_profile.s3_access_profile.id}"
-  subnet_id = "${aws_subnet.wp_public1_subnet.id}"
+  iam_instance_profile   = "${aws_iam_instance_profile.s3_access_profile.id}"
+  subnet_id              = "${aws_subnet.wp_public1_subnet.id}"
 
   provisioner "local-exec" {
     command = <<EOD
@@ -461,5 +464,49 @@ cat <<EOF > userdata
 sudo /bin/echo '*/5 * * * * aws s3 sync s3://${aws_s3_bucket.code.bucket} /var/www/html/' >> /var/spool/cron/root
 EOF
 EOT
+  }
+}
+
+# ----- launch config -----
+resource "aws_launch_configuration" "wp_lc" {
+  name_prefix          = "wp_lc-"
+  image_id             = "${aws_ami_from_instance.wp_golden.id}"
+  instance_type        = "${var.lc_instance_type}"
+  security_groups      = ["${aws_security_group.wp_private_sg.id}"]
+  iam_instance_profile = "${aws_iam_instance_profile.s3_access_profile.id}"
+  key_name             = "${aws_key_pair.wp_auth.id}"
+  user_data            = "${file("userdata")}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# ----- auto scaling group -----
+resource "aws_autoscaling_group" "wp_asg" {
+  name                      = "asg-${aws_launch_configuration.wp_lc.id}"
+  max_size                  = "${var.asg_max}"
+  min_size                  = "${var.asg_min}"
+  health_check_grace_period = "${var.asg_grace}"
+  health_check_type         = "${var.asg_hct}"
+  desired_capacity          = "${var.asg_cap}"
+  force_delete              = true
+  load_balancers            = ["${aws_elb.wp_elb.id}"]
+
+  vpc_zone_identifier = [
+    "${aws_subnet.wp_private1_subnet.id}",
+    "${aws_subnet.wp_private2_subnet.id}",
+  ]
+
+  launch_configuration = "${aws_launch_configuration.wp_lc.name}"
+
+  tag {
+    key                 = "Name"
+    value               = "wp_asg-instance"
+    propagate_at_launch = true
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
