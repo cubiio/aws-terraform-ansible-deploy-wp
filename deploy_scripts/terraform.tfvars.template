@@ -42,3 +42,5 @@ asg_min = ""
 asg_grace = ""
 asg_hct = ""
 asg_cap = ""
+
+delegation_set = ""
