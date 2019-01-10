@@ -1,5 +1,4 @@
 ---
-
 - hosts: dev
   become: yes
   remote_user: ec2-user
@@ -10,15 +9,15 @@
       - httpd
       - php
       - php-mysql
-    - name: Downloaad Wordpress.
+    - name: Download WordPress.
       get_url: url=http://wordpress.org/wordpress-latest.tar.gz dest=/var/www/html/wordpress.tar.gz force=yes
-    - name: Extract Wordpress.
+    - name: Extract WordPress.
       command: "tar xzf /var/www/html/wordpress.tar.gz -C /var/www/html --strip-components 1"
     - name: Make directory tree readable.
       file:
-        path: /var/www/html
+        path: /var/www/html/
         mode: u=rwX,g=rX,o=rX
-        resurse: yes
+        recurse: yes
         owner: apache
         group: apache
     - name: Make sure Apache is started now and at boot.
