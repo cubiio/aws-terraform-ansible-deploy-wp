@@ -7,3 +7,137 @@
 * Terraform
 * Ansible
 * AWS CLI (and an AWS account)
+
+## Set-up
+
+**Docs are WIP and need updating**
+
+### Terminal set-up
+
+Check python is installed and install pip.
+
+```
+python --version
+apt get update
+python-pip
+```
+
+On macOS:
+`brew install terraform`
+
+On Linux:
+Install Terraform via curl
+unzip to `/bin/terraform`
+
+Add to path:
+
+```
+export PATH=$PATH:/bin/terraform
+```
+
+Install Ansible.
+
+
+Generate ssh keys.
+
+```bash
+$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): /root/.ssh/kryptonite
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/kryptonite.
+Your public key has been saved in /root/.ssh/kryptonite.pub.
+
+$ ssh-agent bash
+$ ssh-add ~/.ssh/kryptonite
+
+# confirm ssh was added
+$ ssh-add -l
+```
+
+### IAM and DNS
+
+AWS console - IAM - create a new user with programmatic access
+Add appropriate policies to the user.
+Download the credentials.
+
+```bash
+aws configure --profile superhero
+# at the prompts, enter the key and secret key per the download
+# enter a default region
+# output format can be left as None
+```
+
+Route 43 reusable delegation set
+
+```
+aws route53 create-reusable-delegation-set --caller-reference 1224 --profile superhero
+```
+
+Add the nameservers to hosting config (e.g. in AWS Route 53 config, Namecheap or other registrar).
+
+
+### Terraform
+
+Add terraform script files.
+
+Variables are added to `terraform.tfvars` which is git ignored i.e. do not check this file into git. A templated example is included as a reference.
+
+Then run `terraform init` from the folder where the Terraform scripts are located.
+
+To check Terraform scripts are accurate and to plan the output:
+
+```bash
+terraform plan
+```
+
+Use `terraform fmt --diff` to format the files.
+
+
+### Ansible
+
+s3update called manually, not by Terraform.
+
+Add to the aws_hosts file e.g.
+
+```
+[dev]
+<ip_address>
+[dev:vars]
+s3code=<atkinsdomain
+domain=<atkinsdomain>
+```
+
+## Deploy
+
+### Checklist
+
+#### ssh agent
+`ssh-add -l`
+
+#### aws installed
+aws --version
+
+#### ansible installed and set-up
+`ansible --version`
+
+`vim /etc/ansible/ansible.cfg`
+check `host_key_checking` is set to false
+
+#### terraform installed
+terraform --version
+terraform plan
+
+To deploy:
+
+```
+# safety first
+terraform plan
+
+# if all looks good
+terraform apply
+
+# to remove/destroy
+terraform destroy
+```
