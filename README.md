@@ -12,7 +12,7 @@
 
 **Docs are WIP and need updating**
 
-### Terminal set-up
+### Set-up
 
 Check python is installed and install pip.
 
@@ -22,11 +22,16 @@ apt get update
 python-pip
 ```
 
+#### Install Terraform
+
 On macOS:
 `brew install terraform`
 
-On Linux:
+On Linux Ubuntu:
 Install Terraform via curl
+
+`sudo curl -O https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip`
+
 unzip to `/bin/terraform`
 
 Add to path:
@@ -35,8 +40,25 @@ Add to path:
 export PATH=$PATH:/bin/terraform
 ```
 
-Install Ansible.
+#### Install Ansible.
 
+On macOS:
+`brew install ansible`
+
+On Linux Ubuntu:
+
+```
+sudo apt-get install software-properties-common
+
+sudo apt-add-repository ppa:ansible/ansible
+
+sudo apt-get update
+
+sudo apt-get install ansible
+
+sudo vim /etc/ansible/ansible.cfg
+# uncomment and set host_key_checking to False
+```
 
 Generate ssh keys.
 
@@ -69,7 +91,7 @@ aws configure --profile superhero
 # output format can be left as None
 ```
 
-Route 43 reusable delegation set
+Route 53 reusable delegation set
 
 ```
 aws route53 create-reusable-delegation-set --caller-reference 1224 --profile superhero
